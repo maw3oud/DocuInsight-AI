@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DocuInsight AI - Advanced document analysis for legal and financial professionals. Extract key information, identify risks, and generate summaries with AI.">
+    <meta name="keywords" content="document analysis, AI document analysis, legal document analysis, financial document analysis, contract analysis, document insights">
+    <meta name="author" content="DocuInsight AI">
+    <meta property="og:title" content="DocuInsight AI - AI-Powered Document Analysis">
+    <meta property="og:description" content="Save hours of manual review with our advanced AI document analysis tool designed for legal and financial professionals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://docuinsightai.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Settings - DocuInsight AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="DocuInsight AI Logo" height="30" class="d-inline-block align-text-top me-2">
+                DocuInsight AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/upload">Upload Document</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/settings">Settings</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="mb-4">Settings</h1>
+        
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="list-group mb-4">
+                    <a href="#ai-settings" class="list-group-item list-group-item-action active" data-bs-toggle="list">AI Providers</a>
+                    <a href="#payment-settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Payment Settings</a>
+                    <a href="#account-settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Account Settings</a>
+                    <a href="#notification-settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Notification Settings</a>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="ai-settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">AI Provider Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="/settings/ai" method="post">
+                                    <div class="mb-4">
+                                        <label class="form-label">Select Primary AI Provider</label>
+                                        <select class="form-select" name="primary_ai_provider" id="primary_ai_provider">
+                                            <option value="openai" {% if ai_settings.primary_provider == 'openai' %}selected{% endif %}>OpenAI (GPT-4)</option>
+                                            <option value="deepseek" {% if ai_settings.primary_provider == 'deepseek' %}selected{% endif %}>DeepSeek AI</option>
+                                            <option value="anthropic" {% if ai_settings.primary_provider == 'anthropic' %}selected{% endif %}>Anthropic Claude</option>
+                                            <option value="gemini" {% if ai_settings.primary_provider == 'gemini' %}selected{% endif %}>Google Gemini</option>
+                                            <option value="mistral" {% if ai_settings.primary_provider == 'mistral' %}selected{% endif %}>Mistral AI</option>
+                                        </select>
+                                        <div class="form-text">Select which AI provider to use for document analysis.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">OpenAI API Key</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="openai_api_key" id="openai_api_key" value="{{ ai_settings.openai_api_key if ai_settings.openai_api_key else '' }}" placeholder="sk-...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-openai-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your OpenAI API key for GPT-4 and other OpenAI models.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">DeepSeek AI API Key</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="deepseek_api_key" id="deepseek_api_key" value="{{ ai_settings.deepseek_api_key if ai_settings.deepseek_api_key else '' }}" placeholder="dsk-...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-deepseek-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your DeepSeek AI API key.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Anthropic API Key</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="anthropic_api_key" id="anthropic_api_key" value="{{ ai_settings.anthropic_api_key if ai_settings.anthropic_api_key else '' }}" placeholder="sk-ant-...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-anthropic-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your Anthropic API key for Claude models.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Google Gemini API Key</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="gemini_api_key" id="gemini_api_key" value="{{ ai_settings.gemini_api_key if ai_settings.gemini_api_key else '' }}" placeholder="AIza...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-gemini-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your Google Gemini API key.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Mistral AI API Key</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="mistral_api_key" id="mistral_api_key" value="{{ ai_settings.mistral_api_key if ai_settings.mistral_api_key else '' }}" placeholder="...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-mistral-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your Mistral AI API key.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Advanced AI Settings</label>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="enable_fallback" name="enable_fallback" {% if ai_settings.enable_fallback %}checked{% endif %}>
+                                            <label class="form-check-label" for="enable_fallback">Enable Fallback to Secondary Provider</label>
+                                        </div>
+                                        <div class="form-text">If enabled, the system will automatically try the next available AI provider if the primary one fails.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="model_temperature" class="form-label">Model Temperature: <span id="temperature-value">{{ ai_settings.temperature if ai_settings.temperature else '0.2' }}</span></label>
+                                        <input type="range" class="form-range" min="0" max="1" step="0.1" id="model_temperature" name="model_temperature" value="{{ ai_settings.temperature if ai_settings.temperature else '0.2' }}">
+                                        <div class="d-flex justify-content-between">
+                                            <small>More Precise</small>
+                                            <small>More Creative</small>
+                                        </div>
+                                        <div class="form-text">Adjust the creativity level of the AI responses.</div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Save AI Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="payment-settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Payment Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="/settings/payment" method="post">
+                                    <div class="mb-4">
+                                        <label class="form-label">Stripe API Keys</label>
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">Publishable Key</span>
+                                            <input type="password" class="form-control" name="stripe_publishable_key" id="stripe_publishable_key" value="{{ payment_settings.stripe_publishable_key if payment_settings.stripe_publishable_key else '' }}" placeholder="pk_...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-stripe-pub-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Secret Key</span>
+                                            <input type="password" class="form-control" name="stripe_secret_key" id="stripe_secret_key" value="{{ payment_settings.stripe_secret_key if payment_settings.stripe_secret_key else '' }}" placeholder="sk_...">
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-stripe-secret-key"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                        <div class="form-text">Your Stripe API keys for payment processing.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Subscription Plans</label>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Basic Plan Price ($)</label>
+                                                <input type="number" class="form-control" name="basic_plan_price" value="{{ payment_settings.basic_plan_price if payment_settings.basic_plan_price else '99' }}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Professional Plan Price ($)</label>
+                                                <input type="number" class="form-control" name="professional_plan_price" value="{{ payment_settings.professional_plan_price if payment_settings.professional_plan_price else '299' }}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Enterprise Plan Price ($)</label>
+                                                <input type="number" class="form-control" name="enterprise_plan_price" value="{{ payment_settings.enterprise_plan_price if payment_settings.enterprise_plan_price else '999' }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-text">Set the monthly prices for your subscription plans.</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="enable_annual_discount" name="enable_annual_discount" {% if payment_settings.enable_annual_discount %}checked{% endif %}>
+                                            <label class="form-check-label" for="enable_annual_discount">Enable Annual Billing Discount</label>
+                                        </div>
+                                        <div class="input-group mt-2" style="max-width: 200px;">
+                                            <input type="number" class="form-control" name="annual_discount_percentage" value="{{ payment_settings.annual_discount_percentage if payment_settings.annual_discount_percentage else '20' }}">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div class="form-text">Offer a discount for annual billing.</div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Save Payment Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="account-settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Account Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="/settings/account" method="post">
+                                    <div class="mb-4">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" name="email" value="{{ session.email }}" readonly>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Change Password</label>
+                                        <input type="password" class="form-control mb-2" name="current_password" placeholder="Current Password">
+                                        <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password">
+                                        <input type="password" class="form-control" name="confirm_password" placeholder="Confirm New Password">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Company Information</label>
+                                        <input type="text" class="form-control mb-2" name="company_name" placeholder="Company Name" value="{{ account_settings.company_name if account_settings.company_name else '' }}">
+                                        <input type="text" class="form-control" name="company_website" placeholder="Company Website" value="{{ account_settings.company_website if account_settings.company_website else '' }}">
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Save Account Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="notification-settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Notification Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="/settings/notifications" method="post">
+                                    <div class="mb-4">
+                                        <label class="form-label">Email Notifications</label>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notify_document_complete" name="notify_document_complete" {% if notification_settings.notify_document_complete %}checked{% endif %}>
+                                            <label class="form-check-label" for="notify_document_complete">Document Analysis Complete</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notify_payment_success" name="notify_payment_success" {% if notification_settings.notify_payment_success %}checked{% endif %}>
+                                            <label class="form-check-label" for="notify_payment_success">Payment Success</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notify_payment_failure" name="notify_payment_failure" {% if notification_settings.notify_payment_failure %}checked{% endif %}>
+                                            <label class="form-check-label" for="notify_payment_failure">Payment Failure</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notify_subscription_renewal" name="notify_subscription_renewal" {% if notification_settings.notify_subscription_renewal %}checked{% endif %}>
+                                            <label class="form-check-label" for="notify_subscription_renewal">Subscription Renewal</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>DocuInsight AI</h5>
+                    <p>AI-powered document analysis for legal and financial professionals.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/dashboard" class="text-white">Dashboard</a></li>
+                        <li><a href="/upload" class="text-white">Upload Document</a></li>
+                        <li><a href="/settings" class="text-white">Settings</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled">
+                        <li>Email: support@docuinsightai.com</li>
+                        <li>Phone: (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2025 DocuInsight AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('[id^="toggle-"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const inputId = this.id.replace('toggle-', '');
+                const input = document.getElementById(inputId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        // Update temperature value display
+        const temperatureSlider = document.getElementById('model_temperature');
+        const temperatureValue = document.getElementById('temperature-value');
+        
+        if (temperatureSlider && temperatureValue) {
+            temperatureSlider.addEventListener('input', function() {
+                temperatureValue.textContent = this.value;
+            });
+        }
+    </script>
+</body>
+</html>
